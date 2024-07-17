@@ -1,0 +1,54 @@
+The three Arthmetic Problem
+
+#include <bits/stdc++.h>
+using namespace std;
+
+int n;
+vector<int> arr;
+int ans = 0;
+
+void cnt(int left, int right, int i, int flag)
+{
+
+   if (i == n)
+   {
+      if (left == right && flag)
+         ans++;
+      return;
+   }
+
+   if (flag)
+   {
+      cnt(left, right * arr[i], i + 1, flag);
+      cnt(left, right + arr[i], i + 1, flag);
+      cnt(left, right % arr[i], i + 1, flag);
+   }
+   else
+   {
+      cnt(left * arr[i], right, i + 1, flag);
+      cnt(left + arr[i], right, i + 1, flag);
+      cnt(left % arr[i], right, i + 1, flag);
+      cnt(left, arr[i], i + 1, 1);
+   }
+}
+
+int main()
+{
+
+   int t;
+   cin >> t;
+   while (t--)
+   {
+
+      cin >> n;
+      arr = vector<int>(n);
+      ans = 0;
+      for (int i = 0; i < n; i++)
+         cin >> arr[i];
+
+      cnt(arr[0], 0, 1, 0);
+
+      cout << ans << "\n";
+   }
+   return 0;
+}
