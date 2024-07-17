@@ -1,0 +1,215 @@
+Input:
+5
+8 2
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 1
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+1 1 0 0 0 0 0 0
+0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 1
+0 0 0 0 1 1 1 1
+5 2
+1 0 0 0 1
+1 0 0 0 0
+1 0 0 0 0
+0 0 0 1 0
+1 0 0 1 1
+13 1
+1 0 0 0 0 0 0 0 1 1 0 0 0
+0 1 0 1 1 0 0 1 0 0 0 1 1
+1 1 1 1 1 0 1 0 0 0 0 0 1
+1 0 1 1 1 1 0 0 1 1 1 1 1
+0 1 0 1 0 0 1 0 0 0 0 1 0
+0 1 1 1 1 0 0 0 1 1 0 0 1
+1 1 1 0 1 0 0 0 1 1 1 0 0
+1 0 0 0 1 1 0 0 1 1 1 0 0
+0 0 0 1 0 0 1 0 0 1 0 1 1
+1 0 1 1 1 0 1 0 0 1 0 0 0
+1 0 1 1 1 1 0 1 1 1 0 0 0
+1 1 0 1 0 0 1 1 1 0 1 0 0
+0 1 0 0 1 1 1 1 0 0 1 1 1
+11 3
+1 1 1 1 1 1 1 1 1 1 1
+1 1 1 0 0 1 1 1 1 1 1
+1 1 0 0 0 1 0 1 1 1 1
+1 0 0 1 0 1 0 0 1 1 1
+1 1 0 0 0 0 0 0 1 1 1
+1 1 1 0 0 1 0 0 0 1 1
+1 1 1 1 1 1 1 0 0 0 1
+1 1 1 1 1 0 0 0 1 0 0
+1 1 1 1 1 1 0 0 0 0 1
+1 1 1 1 1 1 1 0 0 1 1
+1 1 1 1 1 1 1 0 1 1 1
+15 3
+0 1 0 1 0 0 0 1 0 0 0 0 0 1 0
+0 0 1 0 0 1 1 0 0 1 0 0 0 0 1
+0 0 0 0 0 0 1 0 0 0 0 0 0 0 0
+1 0 0 0 0 0 0 0 0 0 0 0 0 1 0
+0 0 0 0 0 0 0 0 0 1 0 1 0 0 0
+1 0 0 0 0 0 0 0 0 0 0 0 1 1 1
+0 0 0 0 0 1 0 1 0 0 0 0 0 1 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+0 1 1 0 1 0 1 0 1 0 0 0 0 0 0
+1 0 1 0 1 0 1 0 0 1 0 0 0 0 1
+0 0 1 0 0 1 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 0 0 0 0 0 0 0 0
+1 0 0 0 1 0 1 1 0 0 1 0 0 0 0
+0 0 0 0 0 0 1 1 0 0 0 0 0 0 0
+1 1 0 0 0 0 0 0 0 0 0 0 0 0 1
+
+Output:
+36
+24
+94
+121
+94
+
+
+Code:
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+
+int n, m;
+int a[16][16];
+int one;
+int vis[16][16];
+
+bool check(int x, int y)
+{
+   return x >= 0 && x < n && y >= 0 && y < n;
+}
+
+int calc(int x1, int y1, int x2, int y2)
+{
+   int extra = 0;
+
+   for (int x = -3; x <= 3; x++)
+   {
+      for (int y = -3; y <= 3; y++)
+      {
+         int tx = x + x1, ty = y + y1;
+
+         int dist = abs(x) + abs(y);
+
+         if (dist > m || check(tx, ty) == 0)
+            continue;
+
+         if (a[tx][ty] == 1)
+            continue;
+
+         if (vis[tx][ty] == 0)
+         {
+            vis[tx][ty] = 1;
+            extra++;
+         }
+      }
+   }
+
+   for (int x = -3; x <= 3; x++)
+   {
+      for (int y = -3; y <= 3; y++)
+      {
+         int dist = abs(x) + abs(y);
+         int tx = x + x2, ty = y + y2;
+
+         if (dist > m || check(tx, ty) == 0)
+            continue;
+         if (a[tx][ty] == 1)
+            continue;
+
+         if (vis[tx][ty] == 0)
+         {
+            vis[tx][ty] = 1;
+            extra++;
+         }
+      }
+   }
+
+   return extra;
+}
+
+void undo(int x1, int y1, int x2, int y2)
+{
+   for (int x = -3; x <= 3; x++)
+   {
+      for (int y = -3; y <= 3; y++)
+      {
+         int dist = abs(x) + abs(y);
+         int tx = x + x1, ty = y + y1;
+         if (dist > m || check(tx, ty) == 0)
+            continue;
+         if (a[tx][ty] == 1)
+            continue;
+
+         vis[tx][ty] = 0;
+      }
+   }
+
+   for (int x = -3; x <= 3; x++)
+   {
+      for (int y = -3; y <= 3; y++)
+      {
+         int dist = abs(x) + abs(y);
+         int tx = x + x2, ty = y + y2;
+         if (dist > m || check(tx, ty) == 0)
+            continue;
+         if (a[tx][ty] == 1)
+            continue;
+
+         vis[tx][ty] = 0;
+      }
+   }
+
+}
+
+void solve()
+{
+   cin >> n >> m;
+   one = 0;
+
+   for (int i = 0; i < n; i++)
+   {
+      for (int j = 0; j < n; j++)
+      {
+         cin >> a[i][j];
+         vis[i][j] = 0;
+         if (a[i][j])
+            one++;
+      }
+   }
+
+   int ans = one;
+
+   for (int x1 = 0; x1 < n; x1++)
+   {
+      for (int y1 = 0; y1 < n; y1++)
+      {
+         for (int x2 = 0; x2 < n; x2++)
+         {
+            for (int y2 = 0; y2 < n; y2++)
+            {
+               if (x1 == x2 && y1 == y2)
+                  continue;
+
+               ans = max(ans, calc(x1, y1, x2, y2) + one);
+               undo(x1, y1, x2, y2);
+            }
+         }
+      }
+   }
+
+   cout << ans << "\n";
+}
+
+int main()
+{
+   int t;
+   cin >> t;
+   while (t--)
+   {
+      solve();
+   }
+   return 0;
+}
