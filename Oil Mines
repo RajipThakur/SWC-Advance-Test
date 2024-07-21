@@ -1,0 +1,76 @@
+/*
+There is an island surrounded by oil mines. You will be given n companies and m oil mines having values.
+You have to distribute the mines to "n" companies in fair manner. Remember the companies can have oil 
+mines adjacent to each other and not in between of each others.After distributing them compute the 
+difference of oil mines from the company getting highest and company getting lowest. This number 
+should be minimum.(then only the distribution can be termed as fair).
+
+Input 
+2 
+2 4 
+6 13 10 2 
+2 4 
+6 10 13 2 
+
+output 
+5 
+1
+*/
+
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+vector<int> a;
+int n, m;
+int inf = 1e8;
+
+int fun(int i, int sum, int mx, int mn, int cnt, int par)
+{
+
+    if (cnt == m)
+    {
+        if (par != n || sum != 0)
+            return inf;
+        return (mx - mn);
+    }
+
+    if (par > n)
+        return inf;
+
+    int ans = inf;
+    ans = min(ans, fun((i + 1) % m, sum + a[i], mx, mn, cnt + 1, par));
+    ans = min(ans, fun((i + 1) % m, 0, max(mx, sum + a[i]), min(mn, sum + a[i]), cnt + 1, par + 1));
+
+    return ans;
+}
+
+void solve()
+{
+    cin >> n >> m;
+    a.clear();
+    a.resize(m);
+    for (int i = 0; i < m; i++)
+    {
+        cin >> a[i];
+    }
+
+    int ans = inf;
+    for (int i = 0; i < m; i++)
+    {
+        ans = min(ans, fun(i, 0, 0, inf, 0, 0));
+    }
+
+    cout << ans << "\n";
+}
+
+int main()
+{
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        solve();
+    }
+
+    return 0;
+}
