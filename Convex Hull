@@ -1,0 +1,110 @@
+https://open.kattis.com/problems/convexhull
+
+Code:
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+using pll = pair<ll, ll>;
+using vpll = vector<pll>;
+
+pll operator-(pll p1, pll p2)
+{
+    return {p1.first - p2.first, p1.second - p2.second};
+}
+
+ll cross(pll p1, pll p2)
+{
+    return (p1.first * p2.second - p2.first * p1.second);
+}
+
+ll cross(pll p, pll A, pll B)
+{
+    return cross(A - p, B - p);
+}
+
+ll dist(pll x)
+{
+    return x.first * x.first + x.second * x.second;
+}
+
+pll mn;
+
+bool cmp(pll &x, pll &y)
+{
+
+    ll prod = cross(x - mn, y - mn);
+    if (prod == 0)
+    {
+        return dist(x - mn) < dist(y - mn);
+    }
+    else
+    {
+        return prod > 0;
+    }
+}
+
+vpll convexHull(vpll &a)
+{
+    ll ind = min_element(a.begin(), a.end()) - a.begin();
+    assert(ind < a.size());
+
+    vpll hull = {a[ind]};
+    mn = hull[0];
+    vpll pos;
+
+    ll n = a.size();
+    for (ll i = 0; i < n; i++)
+    {
+        if (a[i] == a[ind])
+            continue;
+        pos.push_back(a[i]);
+    }
+
+    sort(pos.begin(), pos.end(), cmp);
+
+    for (auto &last : pos)
+    {
+        while (hull.size() > 1 && cross(hull[hull.size() - 2], hull.back(), last) <= 0)
+        {
+            hull.pop_back();
+        }
+        hull.push_back(last);
+    }
+
+    return hull;
+}
+
+ll flag;
+
+void solve()
+{
+    ll n;
+    cin >> n;
+
+    if (n == 0)
+    {
+        flag = 0;
+        return;
+    }
+
+    vpll a(n);
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i].first >> a[i].second;
+    }
+
+    auto ans = convexHull(a);
+    cout << ans.size() << "\n";
+    for (auto &[x, y] : ans)
+        cout << x << " " << y << "\n";
+}
+
+int main()
+{
+    flag = 1;
+    while (flag)
+    {
+        solve();
+    }
+    return 0;
+}
