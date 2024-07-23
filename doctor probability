@@ -1,6 +1,7 @@
 /*
 https://www.geeksforgeeks.org/samsung-interview-experience-set-39-campus-r-d-noida/
 https://www.careercup.com/page?pid=samsung-interview-questions
+https://www.geeksforgeeks.org/find-the-probability-of-a-state-at-a-given-time-in-a-markov-chain-set-1/
 
 A Doctor travels from a division to other division where divisions are connected like a graph(directed graph) and 
 the edge weights are the probabilities of the doctor going from that division to other connected division but the 
