@@ -1,0 +1,108 @@
+//https://www.hackerrank.com/contests/target-samsung-13-nov19/challenges/endoscope
+#include<bits/stdc++.h>
+using namespace std;
+//0->left, 1->right, 2->up ,3-> down
+
+int dx[]={0,0,-1,1};
+int dy[]={-1,1,0,0};
+
+
+void solve(){
+    int n,m,x,y,len;
+   cin>>n>>m>>x>>y>>len;
+
+   int a[n][m][4];
+   memset(a,0,sizeof(a));
+
+   for(int i=0;i<n;i++){
+    for(int j=0;j<m;j++){
+        int x;
+        cin>>x;
+
+        if(x==1){
+            a[i][j][0]=a[i][j][1]=a[i][j][2]=a[i][j][3]=1;
+        }else if(x==2){
+            a[i][j][2]=a[i][j][3]=1;
+        }else if(x==3){
+            a[i][j][0]=a[i][j][1]=1;
+        }else if(x==4){
+            a[i][j][2]=a[i][j][1]=1;
+        }else if(x==5){
+            a[i][j][1]=a[i][j][3]=1;
+        }else if(x==6){
+            a[i][j][0]=a[i][j][3]=1;
+        }else if(x==7) {
+            a[i][j][0]=a[i][j][2]=1;
+        }
+    }
+   }
+
+    queue<pair<int,int>> q;
+    int dist[n][m];
+    memset(dist,-1,sizeof(dist));
+
+
+
+    q.push({x,y});
+    dist[x][y]=1;
+
+    while(!q.empty()){
+        auto f=q.front();
+        q.pop();
+
+        for(int k=0;k<4;k++){
+            int tx=dx[k]+f.first;
+            int ty=dy[k]+f.second;
+
+            if(tx>=0 && tx<n && ty>=0 && ty<m && dist[tx][ty]==-1){
+                
+                int flag=0;
+
+                if(k==0){
+                    if(a[tx][ty][1] && a[f.first][f.second][0]){
+                        flag=1;
+                    }
+                }else if(k==1){
+                    if(a[tx][ty][0] && a[f.first][f.second][1]){
+                        flag=1;
+                    }
+                }else if(k==2){
+                    if(a[tx][ty][3] && a[f.first][f.second][2]){
+                        flag=1;
+                    }
+                }else if(k==3){
+                    if(a[tx][ty][2] && a[f.first][f.second][3]){
+                        flag=1;
+                    }
+                }
+
+                if(flag){
+                    dist[tx][ty]=1+dist[f.first][f.second];
+                    q.push({tx,ty});
+                }
+            }
+        }
+    }
+
+    int ans=0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(dist[i][j]!=-1 && dist[i][j]<=len){
+                ans++;
+            }
+        }
+    }
+
+    cout<<ans;
+}
+
+int main(){
+   int t;
+   cin>>t;
+   while(t--){
+    solve();
+    cout<<"\n";
+   }
+
+   return 0;
+}
