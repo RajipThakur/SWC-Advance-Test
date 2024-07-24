@@ -1,0 +1,15 @@
+
+
+from datetime import datetime
+
+# Function to print the day of the week given a date string
+def print_day_of_week(date_str):
+    # Convert the date string to a datetime object
+    date_obj = datetime.strptime(date_str, "%d-%m-%Y")
+    print(date_obj)
+    # Print the day of the week
+    print(date_obj.strftime("%w"))
+    
+# Example input
+date_str = "01-07-2024"
+print_day_of_week(date_str)
